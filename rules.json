@@ -1,0 +1,181 @@
+{
+  "rules": {
+    "public": {
+      ".read": "auth != null",
+      "baseInfo": {
+        "users": {
+          "$uid": {
+            ".write": "$uid == auth.uid",
+            "email": {
+              ".validate": "newData.isString()"
+            },
+            "nickname": {
+              ".validate": "newData.isString() && newData.val().length < 20"
+            },
+            "desc": {
+              ".validate": "newData.isString() && newData.val().length < 50"
+            },
+            "gender": {
+              ".validate": "newData.val() == '男' || newData.val() == '女' || newData.val() == '保密'"
+            },
+            "dateOfBirth": {
+              ".validate": "newData.isNumber()"
+            },
+            "city": {
+              ".validate": "newData.isString() && newData.val().length < 20"
+            },
+            "avatar": {
+              ".validate": "newData.isString()"
+            }
+          }
+        },
+        "groups": {
+          "$gid": {
+            ".write": "$gid.contains(auth.uid)",
+            "name": {
+              ".validate": "newData.isString() && newData.val().length < 20"
+            },
+            "desc": {
+              ".validate": "newData.isString() && newData.val().length < 50"
+            },
+            "creatorId": {
+              ".validate": "newData.val() == auth.uid && root.child('public/baseInfo/users/' + newData.val()).exists()"
+            },
+            "avatar": {
+              ".validate": "newData.isString()"
+            }
+          }
+        }
+      }
+    },
+    "users": {
+      "$uid": {
+        ".read": "$uid == auth.uid",
+        ".write": "$uid == auth.uid",
+        "friends": {
+          "$fid": {
+            "note": {
+              ".write": "$fid == auth.uid && root.child('users/' + $fid + '/requests/' + $uid).exists()",
+              ".validate": "newData.isString()"
+            },
+            "shielded": {
+              ".validate": "newData.isBoolean()"
+            }
+          }
+        },
+        "groups": {
+          "$gid": {
+            "shielded": {
+              ".validate": "newData.isBoolean() && auth.uid == $uid"
+            },
+            "checkTime": {
+              ".write": "root.child('public/baseInfo/groups/' + $gid + '/creatorId').val() == auth.uid && root.child('groups/' + $gid + '/requests/' + $uid).exists()",
+              ".validate": "newData.isNumber()"
+            }
+          }
+        },
+        "requests": {
+          "$fid": {
+            ".write": "$fid == auth.uid && root.child('public/baseInfo/users/' + $fid).exists()",
+            ".validate": "newData.hasChildren(['timestamp', 'content'])",
+            "timestamp": {
+              ".validate": "newData.isNumber()"
+            },
+            "content": {
+              ".validate": "newData.isString()"
+            }
+          }
+        },
+        "invitations": {
+          "$gid": {
+            ".write": "root.child('public/baseInfo/groups/' + $gid + '/creatorId').val() == auth.uid",
+            ".validate": "newData.hasChildren(['uid','timestamp', 'content'])",
+            "uid": {
+              ".validate": "newData.val() == auth.uid"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber()"
+            },
+            "content": {
+              ".validate": "newData.isString()"
+            }
+          }
+        },
+        "sessions": {
+          "$fid": {
+            "$timestamp": {
+              ".write": "$fid == auth.uid && root.child('users/' + $uid + '/friends/' + $fid).exists()",
+              ".validate": "newData.hasChildren(['uid', 'isPicture', 'content'])",
+              "uid": {
+                ".validate": "newData.val() == auth.uid"
+              },
+              "isPicture": {
+                ".validate": "newData.isBoolean()"
+              },
+              "content": {
+                ".validate": "newData.isString()"
+              }
+            }
+          }
+        }
+      }
+    },
+    "groups": {
+      "$gid": {
+        ".read": "$gid.contains(auth.uid)",
+        ".write": "$gid.contains(auth.uid)",
+        "members": {
+          ".read": "root.child('groups/' + $gid + '/members/' + auth.uid).exists()",
+          "$uid": {
+            ".validate": "root.child('public/baseInfo/users/' + $uid).exists()",
+            "joinTime": {
+              ".write": "$uid == auth.uid && root.child('users/' + $uid + '/invitations/' + $gid).exists()",
+              ".validate": "newData.isNumber()"
+            },
+            "shielded": {
+              ".validate": "newData.isBoolean()"
+            },
+            "note": {
+              ".write": "$uid == auth.uid && root.child('groups/' + $gid + '/members/' + $uid).exists()",
+              ".validate": "newData.isString()"
+            }
+          }
+        },
+        "requests": {
+          "$uid": {
+            ".write": "$uid == auth.uid && root.child('public/baseInfo/users/' + $uid).exists()",
+            ".validate": "newData.hasChildren(['gid', 'timestamp', 'content'])",
+            "gid": {
+              ".validate": "newData.val() == $gid"
+            },
+            "timestamp": {
+              ".validate": "newData.isNumber()"
+            },
+            "content": {
+              ".validate": "newData.isString()"
+            }
+          }
+        },
+        "session": {
+          ".read": "root.child('groups/' + $gid + '/members/' + auth.uid).exists()",
+          "$timestamp": {
+            ".write": "root.child('groups/' + $gid + '/members/' + auth.uid).exists()",
+            ".validate": "newData.hasChildren(['uid', 'isPicture', 'content'])",
+            "uid": {
+              ".validate": "newData.val() == auth.uid"
+            },
+            "isPicture": {
+              ".validate": "newData.isBoolean()"
+            },
+            "content": {
+              ".validate": "newData.isString()"
+            }
+          }
+        }
+      }
+    },
+    "$other": {
+      ".validate": false
+    }
+  }
+}
