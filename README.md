@@ -2,6 +2,8 @@
 
 > 一个模仿微信的即时通讯单页应用。用vue做界面，使用野狗做后端服务。
 
+你可以访问[Demo](https://devinzhong.github.io/vue-im)以预览应用效果
+
 **目前在Chrome下访问正常，其他浏览器未测试，目测会很蛋疼**
 
 ## Build Setup
@@ -13,7 +15,9 @@
 
 ``` bash
 # install dependencies
+# 这里建议使用代理，比如 https://github.com/rofl0r/proxychains-ng
 npm install
+# proxychains4 npm install 如果使用proxychains-ng将会是这样
 
 # serve with hot reload at localhost:8080
 npm run dev
@@ -30,6 +34,6 @@ npm run build
 
 
 ## What's next ?
-补充单元测试与注释
-完善功能，补充细节
-优化性能
+- 补充单元测试与注释
+- 完善功能，补充细节
+- 优化性能
