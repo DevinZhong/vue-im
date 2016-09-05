@@ -79,7 +79,7 @@
     <div class="body">
       <div class="avatar" @click="$els.file.click()">
         <input v-el:file type="file" @change="updateAvatar" accept="image/png,image/jpeg,image/gif" style="display:none;">
-        <avatar :src="userInfo.avatar || ''" size="5rem" margin=".4rem" border-radius=".4rem" :username="userInfo.email"></avatar>
+        <avatar :src="userInfo.avatar || ''" size="5rem" margin=".4rem" border-radius=".4rem" :username="userInfo.nickname || userInfo.email"></avatar>
       </div>
       <span class="email">{{ userInfo.email }}</span>
       <input class="nickname" :value="userInfo.nickname" @blur="updateNickname" placeholder="昵称">

@@ -2,7 +2,9 @@
 
 > 一个模仿微信的即时通讯单页应用。用vue做界面，使用野狗做后端服务。
 
-你可以访问[Demo](https://devinzhong.github.io/vue-im)以预览应用效果
+**项目状态：开发中**
+
+你可以访问[demo](https://devinzhong.github.io/vue-im)以预览应用效果
 
 **目前在Chrome下访问正常，其他浏览器未测试，目测会很蛋疼**
 
@@ -34,6 +36,6 @@ npm run build
 
 
 ## What's next ?
+- 修复bug，完善功能
 - 补充单元测试与注释
-- 完善功能，补充细节
 - 优化性能
